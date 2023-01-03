@@ -2,6 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Req, UseGuards } from '@nestjs/common/decorators';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import path from 'path';
 
 @Controller('users')
 export class UsersController {
@@ -30,5 +33,12 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/me')
+  me(@Req() request){
+    const userId = request.user.userId;
+    return this.usersService.findOne(userId);
   }
 }
