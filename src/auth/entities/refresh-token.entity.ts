@@ -1,7 +1,6 @@
 import {sign} from 'jsonwebtoken';
 
-class RefreshToken{
-    
+export class RefreshToken{    
     id: number;
     userId: number;
     userAgent: string;
@@ -15,5 +14,3 @@ class RefreshToken{
         return sign({...this}, process.env.REFRESH_SECRET);
     }
 }
-
-export default RefreshToken;

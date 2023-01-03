@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, HttpStatus, Injectable } from '@nestjs/common';
 import { sign, verify } from 'jsonwebtoken';
-import RefreshToken from 'src/users/entities/refresh-token.entity';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
+import { RefreshToken } from './entities/refresh-token.entity';
 
 @Injectable()
 export class AuthService {
@@ -53,17 +53,13 @@ export class AuthService {
     async login(
         email: string,
         password: string,
-        values: { userAgent: string; ipAddress: string },
+        values: { userAgent: string; ipAddress: string }
       ): Promise<{ accessToken: string; refreshToken: string } | undefined> {
         // need to import userService
         const user = await this._users.findByEmail(email);
-        if (!user) {
-          return undefined;
-        }
+        if (!user)  throw new ForbiddenException('Access Denied');
         // verify your user -- use argon2 for password hashing!!
-        if (user.password !== password) {
-          return undefined;
-        }
+        if (user.password !== password)  throw new ForbiddenException('Access Denied');
         // need to create this method
         return this.newRefreshAndAccessToken(user, values);
       }

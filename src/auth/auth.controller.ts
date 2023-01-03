@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Ip, Post, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Ip, Post, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import RefreshTokenDto from './dto/refresh-token.dto';
@@ -13,7 +13,7 @@ export class AuthController {
       // geting the useragent and ip address from @Req decorator and @Ip decorater imported at the top.
     return this.authService.login(body.email, body.password, {
       ipAddress: ip,
-      userAgent: request.headers['user-agent'],
+      userAgent: request.headers['user-agent']
     });
   }
 
